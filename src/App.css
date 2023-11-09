@@ -28,6 +28,20 @@
   color: #61dafb;
 }
 
+h1{
+    
+  text-shadow:
+    1px 1px 1px rgb(28, 255, 66),
+    2px 2px 1px rgb(209, 105, 105);
+    
+}
+
+.required::after {
+  content: ' *';
+  color: red;
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
