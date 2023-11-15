@@ -7,6 +7,7 @@ import './Account.css'
 import MyNavbar from "../../Shared/MyNavbar";
 import ShowAllaccount from './ShowAllAccount';
 import { useNavigate } from "react-router-dom";
+import { GetAllBanks } from "../../Service/bank";
 
 const AddAccount = () => {
   const [pageSize, setPageSize] = useState(2);

@@ -66,7 +66,7 @@ try {
             headers:
             {
                 Authorization:localStorage.getItem('access_token')
-            },
+            }
             })
         
         
@@ -80,26 +80,28 @@ try {
       
     
    
-    export const showPassBook = async(accountNo)=>{
+    export const showPassBook = async(pageNumber,pageSize,accountNo)=>{
         try {
             
-            console.log("inside passbook api account")
-            let response = await axios.post(`http://localhost:8084/bankapp/printPassBook`,{
-               
-                "accountNumber":accountNo
-            },
-            {   
+            console.log("inside passbook api account-----------",pageNumber,pageSize,accountNo)
+            let response = await axios.get(`http://localhost:8084/bankapp/printPassBook`,{
+
+            params:{ 
+              pageNumber:pageNumber,
+              pageSize:pageSize,
+             accountNo:accountNo
+            },  
             headers:
             {
                 Authorization:localStorage.getItem('access_token')
             },
             })
         
-        
+            console.log("inside passbook ^^^^^^^ account",response)
             return response;
         }
         catch (error) {
-            throw error;
+           
         }
     }
     

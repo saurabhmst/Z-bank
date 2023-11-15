@@ -12,6 +12,7 @@ import ShowBank from "./Components/bank/ShowBank";
 import ShowCustomer from "./Components/customer/ShowCustomer";
 import Transaction from "./Components/bank/Transfer";
 import PassBook from "./Components/bank/PassBook";
+import EditProfile from "./Components/customer/EditProfile";
 
 function App() {
     return(
@@ -34,7 +35,8 @@ function App() {
         <Route exact path="/get_bank" element={<ShowBank/>}></Route>
         <Route exact path="/get_customer" element={<ShowCustomer/>}></Route>
         <Route exact path="/transaction" element={<Transaction/>}></Route>
-        <Route exact path="/passbook" element={<PassBook/>}></Route>      
+        <Route exact path="/passbook" element={<PassBook/>}></Route>
+        <Route exact path="/edit_profile" element={<EditProfile/>}></Route>      
       </Routes>
    
   );

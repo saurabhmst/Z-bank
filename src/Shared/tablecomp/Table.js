@@ -5,6 +5,8 @@ import React from 'react'
 
 function Tab({data,isUpdateButton,isDeleteButton,deleteFun,UpdateFun}) {
     let headerdata=<></>;
+
+    console.log("data in table ",data);
     
     if (data.length!=0) {
         console.log("data=="+data);

@@ -15,6 +15,8 @@ const ShowAllAccount=()=>{
   const [data, setData] = useState([]);
   const [totalrecord, setTotalrecord] = useState();
   const [totalpage, setTotalpage] = useState();
+  const [filterdata,setFilterdta] = useState([]);
+  
 
  
   const getAccount = async () => {
@@ -51,11 +53,27 @@ const ShowAllAccount=()=>{
       </div>
       
       <div className='col-3'>
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+        
+        onChange={
+          (e)=>{
+
+            let search=e.target.value;
+            let d=data.filter(
+              (d)=>{
+
+                return search.toLowerCase===''?d:
+                d.balance.toString().includes(search)
+              }
+            )
+
+            setFilterdta(d);
+          }
+        }
+      
+      />
       </div>
-        <div className='col-1'>
-        <button class="btn btn-danger" type="submit">Search</button>
-        </div>
+        
       
       
       
@@ -75,7 +93,7 @@ const ShowAllAccount=()=>{
       <label for="exampleInputPassword1" class="form-label"><h1>Accouts</h1></label>
       </div >
       <div className="m-3 mb-5">
-      < Table data={data} isDeleteButton={false} isUpdateButton={false}></Table>
+      < Table data={filterdata.length==0?data:filterdata} isDeleteButton={false} isUpdateButton={false}></Table>
       </div>
       <diV style={{marginTop:"70vh"}}></diV>
     </div>
