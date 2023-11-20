@@ -1,10 +1,11 @@
 import axios from "axios";
+import { getCustomerByUsername } from "./customer";
 
 
 
 export const GetAllBanks = async (pageNumber=0,pageSize=10)=> {
-
-   
+try {
+    
 let response = await axios.get(`http://localhost:8084/bankapp/allBanks`,{
     params:
     {
@@ -20,10 +21,16 @@ let response = await axios.get(`http://localhost:8084/bankapp/allBanks`,{
 )
 
 return response
+
+} catch (error) {
+    throw error
 }
+}  
 
 export const saveBank = async (bankName,abbreviation,branch,ifsc)=> {
 
+   try {
+    
    
     let response = await axios.post(`http://localhost:8084/bankapp/addBank`,{
         "bankName":bankName,
@@ -42,11 +49,16 @@ export const saveBank = async (bankName,abbreviation,branch,ifsc)=> {
     console.log("bank responce is ------"+response);
     return response
     }
-    
-    
+ catch (error) {
+    throw error
+}
+}   
 
     export const updateBankService = async(bankName,abbreviation,branch,ifscCode)=>{
 
+        try {
+            
+        
         console.log("ifsc in service")
         console.log(ifscCode)
 
@@ -71,12 +83,17 @@ export const saveBank = async (bankName,abbreviation,branch,ifsc)=> {
 
 
         return response;
+    } catch (error) {
+        throw error    
+    }
     }
 
 
     
    export const deleteBankService = async(Bankid)=>{
 
+    try {
+    
     let response = await axios.delete(`http://localhost:8084/bankapp/delete`,{
        params:
        {
@@ -90,4 +107,34 @@ export const saveBank = async (bankName,abbreviation,branch,ifsc)=> {
 
 
     return response;
+
+        
+} catch (error) {
+      throw error  
 }
+}
+
+export const GetBanks = async (userId)=> {
+      try {
+        
+      
+   
+    let response = await axios.get(`http://localhost:8084/bankapp/getBank`,{
+        params:
+        {
+            customerId:userId
+            
+        },
+        headers:
+        {
+            Authorization:localStorage.getItem('access_token')
+        },
+    }
+    )
+    
+    return response
+} catch (error) {
+    throw error
+  }
+    }
+    

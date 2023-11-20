@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getCustomerByUsername } from "./customer";
 
 
 
@@ -48,7 +49,7 @@ try {
     return response
     } catch (error) {
          
-        alert(error.message)
+        throw error
     
 }
     }
@@ -101,7 +102,37 @@ try {
             return response;
         }
         catch (error) {
+
+            throw error
            
+        }
+    }
+    
+      
+    
+    export const getCustomerAccounts = async()=>{
+        try {
+            
+            let customer=await getCustomerByUsername(localStorage.getItem('username'));
+            let customerId=customer.data.customerId;
+            console.log("customer",customerId)
+            console.log("inside passbook api account-----------",customerId)
+            let response = await axios.get(`http://localhost:8084/bankapp/getCustomerAccounts`,{
+
+            params:{ 
+             customerId
+            },  
+            headers:
+            {
+                Authorization:localStorage.getItem('access_token')
+            },
+            })
+        
+            console.log("inside passbook ^^^^^^^ account",response.data.content)
+            return response;
+        }
+        catch (error) {
+           throw error
         }
     }
     

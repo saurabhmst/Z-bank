@@ -3,6 +3,7 @@ import React from 'react'
 
 export const transactionService= async(accountNumber,type,amount)=> {
   
+  try{
     
   let response = axios.post(`http://localhost:8084/bankapp/transaction`,{
 
@@ -19,6 +20,9 @@ export const transactionService= async(accountNumber,type,amount)=> {
  } )
 
   return response
+} catch (error) {
+  throw error
+}
 
 
 }
@@ -29,7 +33,7 @@ export const transactionService= async(accountNumber,type,amount)=> {
 
 export const transferService= async(accountNumber,RecieverAccount,type,amount)=> {
   
-    
+    try{
     let response = axios.post(`http://localhost:8084/bankapp/transaction`,{
   
     "accountNumber":accountNumber,
@@ -46,6 +50,10 @@ export const transferService= async(accountNumber,RecieverAccount,type,amount)=>
    } )
   
     return response
+
+  } catch (error) {
+    throw error
+  }
   
   
   }

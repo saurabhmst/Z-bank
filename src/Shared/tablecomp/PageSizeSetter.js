@@ -1,6 +1,6 @@
 import React from 'react'
 
-function PageSizeSetter({setPageSize,setTotalpage,totalrecord,pageSize}) {
+function PageSizeSetter({setPageSize,setTotalpage,totalrecord,pageSize,setPageNumber}) {
   
   return (
     <select
@@ -9,6 +9,7 @@ function PageSizeSetter({setPageSize,setTotalpage,totalrecord,pageSize}) {
     aria-label="Floating label select example"
     onChange={(e) => {
       setPageSize(e.target.value);
+      setPageNumber(0);
       console.log("totalRecord========" + totalrecord);
       setTotalpage(Math.ceil(totalrecord / e.target.value));
       }}

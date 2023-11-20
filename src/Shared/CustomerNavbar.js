@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
 
-const MyNavbar =()=> {
+const CustomerNavbar =()=> {
 const navigate= new useNavigate();
   return (
     <div>
@@ -14,23 +14,23 @@ const navigate= new useNavigate();
           >
             <ul className="navbar-nav h2 p-2 ms-auto">
             <li className="nav-item">
-                <a className="nav-link mx-5 " href="/add_customer">
+                <a className="nav-link mx-5 " href="/customer_dash_board">
                   Home
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link mx-5 " href="/add_customer">
-                  Customer
+                <a className="nav-link mx-5 " href="/transaction">
+                  Transaction
                 </a>
               </li>
               <li className="nav-item mx-5">
-                <a className="nav-link" href="/add_bank">
-                   Bank
+                <a className="nav-link" href="/passbook">
+                   PassBook
                 </a>
               </li>
               <li className="nav-item mx-5">
-                <a className="nav-link" href="/add_account">
-                   Account
+                <a className="nav-link" href="/edit_profile">
+                   Profile
                 </a>
               </li>
             </ul>
@@ -59,4 +59,4 @@ const navigate= new useNavigate();
   )
 }
 
-export default MyNavbar
+export default CustomerNavbar

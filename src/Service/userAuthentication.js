@@ -3,7 +3,8 @@ import axios from "axios"
 
 
 export const login = async (userName,password)=>{
-
+try
+{
       
 let response = await axios.post(`http://localhost:8084/bankapp/login`,{
     
@@ -16,10 +17,15 @@ let response = await axios.post(`http://localhost:8084/bankapp/login`,{
 
 return response
 
+} catch (error) {
+  throw error
+}
+
 
 }
 
 export const validateUser= async (authToken)=>{
+  try{
 
   console.log("inside validator >>>>>>>>>>>>>>>>>>>>>>>>>>>>>",authToken)
 
@@ -35,6 +41,9 @@ let response = await axios.get(`http://localhost:8084/bankapp/validator`,{
 
 console.log("response value is ----------------",response)
 return response;
+} catch (error) {
+  throw error
+}
 
 }
 

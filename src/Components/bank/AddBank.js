@@ -5,10 +5,12 @@ import Table from "../../Shared/tablecomp/Table"
 import PaginationApp from "../../Shared/tablecomp/PaginationApp"
 import PageSizeSetter from "../../Shared/tablecomp/PageSizeSetter";
 import './Bank.css'
-import MyNavbar from "../../Shared/MyNavbar";
+import MyNavbar from "../../Shared/AdminNavbar";
 import { useNavigate } from "react-router-dom";
 import EditBank from './EditBank';
 import { validateUser as validator } from "../../Service/userAuthentication";
+import { abbreviationRegex, bankNameRegex, ifscCodeRegex, nameRegex } from "../../validation/Validation";
+import { errorAbbreviation, errorBankName, errorIfsc } from "../../validation/ErrorMessage";
 
 
     
@@ -27,11 +29,12 @@ import { validateUser as validator } from "../../Service/userAuthentication";
         const [onDelete,setonDelete] = useState();
         const [show,setShow]=useState(false)
         const naviagte=new useNavigate();
+        const [msg,setMsg] =useState('')
         const getBanks = async () => {
           console.log("pageSize.............." + pageSize);
           console.log("pageNumb.............." + pageNumber);
          
-          
+          try{
          let response= await GetAllBanks(pageNumber, pageSize);
          console.log("request is",response.request.responseURL)
           console.log(response);
@@ -44,6 +47,10 @@ import { validateUser as validator } from "../../Service/userAuthentication";
             console.log("page ct is "+totalpage)
 
           }
+
+        } catch (error) {
+          alert(error.response.data.message)
+        }
       
         };
    
@@ -90,10 +97,15 @@ import { validateUser as validator } from "../../Service/userAuthentication";
    ) 
 
   const handleSubmit=async(e)=>{
-   
+    
+    try{
     e.preventDefault();
      let d=await saveBank(bankName,branch,ifsc,abbreviation);
      setSaveBanks(d);
+     alert("Bank added successfully!")
+    } catch (error) {
+      alert(error.response.data.message)
+    }
   
   }
 
@@ -108,24 +120,32 @@ import { validateUser as validator } from "../../Service/userAuthentication";
   }
 
   const editBankData=async()=>{
+    try{
     let response=await updateBankService(bankName,abbreviation,branch,ifsc);
     setSaveBanks(response);
     alert('bank updated successfully')
+  } catch (error) {
+    alert(error.response.data.message)
+  }
 
   }
 
 
   const deleteBank=async(data)=>{
+    try{
     console.log("inside delete function",data.bankId)
     let response = await deleteBankService(data.bankId)
     setonDelete(response);
     console.log(response);
+  } catch (error) {
+    alert(error.response.data.message)
+  }
    }
 
 
   return (
     <div>
-
+     <validateUser></validateUser>
     {show && <EditBank bankName={bankName} abbreviation={abbreviation} branch={branch}  show={show} setBankname={setBankname} setBranch={setBranch} setAbbreviation={setAbbreviation} setShow= {setShow}
     editBankData={editBankData}
     ></EditBank>}
@@ -135,21 +155,44 @@ import { validateUser as validator } from "../../Service/userAuthentication";
         <div className="col-6 offset-3">
           <div className="text-center text-primary text-dark m-5 fw-bold"><h1>Add New Bank</h1></div>
             <form className="shadow-lg p-5 rounded-border border-warning text-white">
+            <div className="text-danger text-center fw-bold">{msg}</div>
+
             <div class="mb-2">
-              <label for="exampleInputEmail1" class="form-label">Bank Name</label>
-              <input type="text" class="form-control rounded-pill text-dark fw-bold required" onChange={(e)=>{setBankname(e.target.value)}}   id="exampleInputEmail1" aria-describedby="emailHelp"/>
+              <label for="exampleInputEmail1" class="form-label">Bank Name*</label>
+              <input type="text" class="form-control rounded-pill text-dark fw-bold required" onChange={(e)=>{setBankname(e.target.value)
+              if(!bankNameRegex.test(e.target.value))
+              {setMsg(errorBankName)
+              }
+             else{setMsg('')
+              }
+               }}   id="exampleInputEmail1" aria-describedby="emailHelp"/>
             </div>
             <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Branch</label>
-              <input type="text" class="form-control rounded-pill text-dark fw-bold required" id="exampleInputPassword1" onChange={(e)=>{setBranch(e.target.value)}}/>
+              <label for="exampleInputPassword1" class="form-label">Branch*</label>
+              <input type="text" class="form-control rounded-pill text-dark fw-bold required" id="exampleInputPassword1" onChange={(e)=>{setBranch(e.target.value)
+              if(!nameRegex.test(e.target.value))
+              {setMsg(errorBankName)
+              }
+             else{setMsg('')
+              }}}/>
             </div>
             <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">Abbrevation</label>
-              <input type="text" class="form-control rounded-pill text-dark fw-bold" id="exampleInputPassword1" onChange={(e)=>{setAbbreviation(e.target.value)}}/>
+              <label for="exampleInputPassword1" class="form-label">Abbrevation*</label>
+              <input type="text" class="form-control rounded-pill text-dark fw-bold" id="exampleInputPassword1" onChange={(e)=>{setAbbreviation(e.target.value)
+              if(!abbreviationRegex.test(e.target.value))
+              {setMsg(errorAbbreviation)
+              }
+             else{setMsg('')
+              }}}/>
             </div>
             <div class="mb-2">
-              <label for="exampleInputPassword1" class="form-label">ifsc</label>
-              <input type="text" class="form-control rounded-pill text-dark fw-bold" id="exampleInputPassword1" onChange={(e)=>{setIfsc(e.target.value)}}/>
+              <label for="exampleInputPassword1" class="form-label">ifsc*</label>
+              <input type="text" class="form-control rounded-pill text-dark fw-bold" id="exampleInputPassword1" onChange={(e)=>{setIfsc(e.target.value)
+              if(!ifscCodeRegex.test(e.target.value))
+              {setMsg(errorIfsc)
+              }
+             else{setMsg('')
+            }}}/>
             </div>
               <button type="submit" class="btn btn-primary rounded-pill btn-lg border border-warning" onClick={handleSubmit}>Submit</button>
             </form>
@@ -173,11 +216,12 @@ import { validateUser as validator } from "../../Service/userAuthentication";
             setTotalpage={setTotalpage}
             totalrecord={totalrecord}
             pageSize={pageSize}
+            setPageNumber={setPageNumber}
           ></PageSizeSetter>
         </div>
       </div> 
     
-      <validateUser></validateUser>
+     
 
       <div className="col-10 offset-1">
       <div className="text-center">

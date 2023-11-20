@@ -5,6 +5,9 @@ import PaginationApp from '../../Shared/tablecomp/PaginationApp'
 import PageSizeSetter from '../../Shared/tablecomp/PageSizeSetter'
 import { useState,useEffect } from 'react'
 import { InputGroup } from 'react-bootstrap';
+import { validateUser as validator } from "../../Service/userAuthentication";
+import { useNavigate } from 'react-router-dom';
+import AdminNavbar from '../../Shared/AdminNavbar';
 
 
 
@@ -15,14 +18,16 @@ const ShowAllAccount=()=>{
   const [data, setData] = useState([]);
   const [totalrecord, setTotalrecord] = useState();
   const [totalpage, setTotalpage] = useState();
-  const [filterdata,setFilterdta] = useState([]);
+  const [filteredData,setFilteredData] = useState([]);
+  const [validateUser,setIsValidUser]=useState()
+  const navigate = new useNavigate();
   
-
+  let search ='';
  
   const getAccount = async () => {
     console.log("pageSize.............." + pageSize);
     console.log("pageNumb.............." + pageNumber);
-
+     try{
     let response = await GetAccounts(pageNumber, pageSize);
     console.log("request is", response.request.responseURL);
     console.log(response);
@@ -34,14 +39,49 @@ const ShowAllAccount=()=>{
       setTotalpage(Math.ceil(response.headers["account-count"] / pageSize));
       console.log("page ct is " + totalpage);
     }
+  } catch (error) {
+    alert(error.response.data.message)
+  }
     };
+
+    const ValidateUser = async()=>{
+     
+      let authToken = localStorage.getItem('access_token');
+      if(!authToken)
+      {
+       setIsValidUser(false)
+       alert('login as a admin first!')
+       navigate('/')
+      }
+      console.log("auth value is "+authToken);
+      let response = await validator(authToken)
+      console.log("responce value is ",response.data.role)
+      if(response.data.role != "ROLE_ADMIN")
+      {
+         setIsValidUser(false);
+         navigate('/')
+         alert('login as a admin first!')
+      }
+     setIsValidUser(true)
+     
+ 
+    } 
+
+    useEffect(()=>{
+      ValidateUser()
+    },[])
+    
     useEffect(() => {
         console.log("use effect called");
         getAccount();
-      }, [pageNumber, pageSize, totalpage, totalrecord]);
+      }, [pageNumber, pageSize]);
 
   
   return (
+    <div>
+      <div className='row'>
+      <AdminNavbar></AdminNavbar>
+      </div>
     <div class="container">
     <div className="row mt-5">
       <div className="col-3 offset-1">
@@ -55,21 +95,20 @@ const ShowAllAccount=()=>{
       <div className='col-3'>
       <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
         
-        onChange={
-          (e)=>{
-
-            let search=e.target.value;
-            let d=data.filter(
-              (d)=>{
-
-                return search.toLowerCase===''?d:
-                d.balance.toString().includes(search)
-              }
-            )
-
-            setFilterdta(d);
-          }
-        }
+        onChange={(e) => {
+          search= e.target.value;
+          let dat = data.filter((d) => {
+            return search.toLowerCase === '' ?
+              d :
+              d.lastName.toString().includes(search)
+              || d.bankName.toString().includes(search)
+              || d.branch.toString().includes(search)
+              || d.firstName.toString().includes(search)
+              || d.balance.toString().includes(search)
+              ||d.ifsc.toString().includes(search)
+          })
+          setFilteredData(dat);
+              }}
       
       />
       </div>
@@ -84,6 +123,7 @@ const ShowAllAccount=()=>{
           setTotalpage={setTotalpage}
           totalrecord={totalrecord}
           pageSize={pageSize}
+          setPageNumber={setPageNumber}
         ></PageSizeSetter>
       </div>
     </div>
@@ -93,12 +133,12 @@ const ShowAllAccount=()=>{
       <label for="exampleInputPassword1" class="form-label"><h1>Accouts</h1></label>
       </div >
       <div className="m-3 mb-5">
-      < Table data={filterdata.length==0?data:filterdata} isDeleteButton={false} isUpdateButton={false}></Table>
+      < Table data={filteredData.length==0?data:filteredData} isDeleteButton={false} isUpdateButton={false}></Table>
       </div>
       <diV style={{marginTop:"70vh"}}></diV>
     </div>
   </div>
-  
+</div>  
   )
 }
 
